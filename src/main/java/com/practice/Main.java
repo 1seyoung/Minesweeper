@@ -42,7 +42,7 @@ public class Main {
 
             switch (choice){
                 case 1 :
-                    Game game = new Game();
+                    Game game = new Game(_name);
                     game.startGame();
                     break; // break 안했더니 그냥 종료됨 ,,, 잊지 말기...
                 case 2 :
