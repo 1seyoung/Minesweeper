@@ -5,7 +5,8 @@ import java.time.Duration;
 import java.util.Random;
 import java.util.Scanner;
 
-//TODO : 지뢰 플래그 /언플래그 기능 , 다 잘 선택하면 게임 이긴걸로 결과 출력하는걸로
+//TODO 1 : 지뢰 플래그 /언플래그 기능 , 다 잘 선택하면 게임 이긴걸로 결과 출력하는걸로
+//TODO 2 : 두 명이서 같이하기
 
 public class Game {
 
@@ -54,12 +55,15 @@ public class Game {
             }
         }
         printMap(map);
-        System.out.println("Game Start");
+        System.out.println("     ----------------------------------------------------------------------------");
+        System.out.println("                            GAME START");
+        System.out.println("     ----------------------------------------------------------------------------");
         while (game) {
 
             start = Instant.now();
             printMap(userMap);
 
+            System.out.print("Me >> ");
             command = input.nextLine().trim(); // 선택 입력
             CommandResult result = cmdInterpreter(command); // 어떤 문법이냐 new는 없는데
 
@@ -104,24 +108,24 @@ public class Game {
         int size = map.length;
 
         // 열 번호 출력
-        System.out.print("  "); // 왼쪽 상단 공백
+        System.out.print("     "); // 왼쪽 상단 공백 (행 번호와 간격 맞춤)
         for (int i = 0; i < size; i++) {
-            System.out.print(i + " ");
+            System.out.printf("%-3d", i); // 열 번호를 고정된 칸 너비로 출력
         }
         System.out.println(); // 줄 바꿈
 
         // 열 구분선 출력
-        System.out.print("  "); // 왼쪽 상단 공백
+        System.out.print("     "); // 왼쪽 상단 공백 (행 번호와 간격 맞춤)
         for (int i = 0; i < size; i++) {
-            System.out.print("--");
+            System.out.print("---"); // 고정된 너비의 구분선
         }
         System.out.println("-"); // 줄 바꿈
 
         // 행 번호와 맵 출력
         for (int i = 0; i < size; i++) {
-            System.out.print(i + "|"); // 행 번호와 구분선
+            System.out.printf("%-3d |", i); // 행 번호를 고정된 칸 너비로 출력
             for (int j = 0; j < size; j++) {
-                System.out.print(map[i][j] + " ");
+                System.out.printf("%-3s", map[i][j]); // 맵 값을 고정된 칸 너비로 출력
             }
             System.out.println(); // 줄 바꿈
         }
@@ -191,11 +195,33 @@ public class Game {
                 return new CommandResult(true);
             }
 
+        } else if (cmd.matches("^flag\\s+\\d+,\\d+$")) {
+            handleFlag(cmd);
+            return new CommandResult(true, "지뢰 체크 완료");
+        } else if (cmd.matches("^unflag\\s+\\d+,\\d+$")) {
+            handleUnflag(cmd);
         } else {
             System.out.println("Invalid command");
             return new CommandResult(true );
         }
         return null; // 이게 없으면 왜 큰일인가
+    }
+
+    private void handleUnflag(String cmd) {
+        String[] parts = cmd.split("\\s+|,");
+        int x = Integer.parseInt(parts[1]); // 첫 번째 숫자
+        int y = Integer.parseInt(parts[2]); // 두 번째 숫자
+
+        userMap[x][y] = "☐";
+    }
+
+    private void handleFlag(String cmd) {
+        // 좌표 추출
+        String[] parts = cmd.split("\\s+|,");
+        int x = Integer.parseInt(parts[1]); // 첫 번째 숫자
+        int y = Integer.parseInt(parts[2]); // 두 번째 숫자
+
+        userMap[x][y] = "x";
     }
 
     private String handleCoordinates(String coordinates) {
@@ -233,6 +259,10 @@ public class Game {
         Object value = map[x][y];
         userMap[x][y] = value;
 
+        if (isNumeric(value)){
+            return;
+        }
+
         //해당 위치의 상하좌우대각선을 체크
         int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
         int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};
@@ -258,7 +288,7 @@ public class Game {
         }
     }
 
-    // 숫자 여부 확인 유틸리티 메서드
+    // 숫자 여부 확인 유틸리티 메서드 -> GPT
     private boolean isNumeric(Object obj) {
         if (obj instanceof String) {
             try {
