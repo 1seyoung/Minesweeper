@@ -63,8 +63,6 @@ public class Main {
                         case "flag":
                             gameController.handleTileFlag(x, y);
                             break;
-                        default:
-                            System.out.println("다시 입력하세요");
                     }
 
                     gameController.printBoard();

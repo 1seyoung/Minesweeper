@@ -1,10 +1,8 @@
 package com.practice;
 
-import java.beans.EventHandler;
-
 public class GameController {
     // 게임 상태, 이벤트 , 게임 보드 관리하는 컨트롤러
-    private GameStateModel gameState;
+    private GameStateModel gameState; // 왜 final 로 하라는 거야...
     private GameBoard gameBoard;  // 여기가 public 이고 아니고가 영향을 주는감...
 
     public GameController (int rows, int cols, String level, GameStateModel gameState) {
