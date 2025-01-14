@@ -1,5 +1,8 @@
 package com.practice;
 
+import com.practice.state.GameOverState;
+import com.practice.state.GameState;
+import com.practice.state.VictoryState;
 import java.util.Scanner;
 
 public class Main {
@@ -19,11 +22,7 @@ public class Main {
 
         GameStateModel gameState = new GameStateModel();
 
-        //여기 까진 실행
-
-        //rows, cols, level -> 여기서 문제 발생
         GameController gameController = new GameController(rows, cols, level, gameState);
-
 
         System.out.println("Enter command (start / exit): ");
         String command = scanner.next();
@@ -38,12 +37,12 @@ public class Main {
             while (true) {
                 GameState currentState = gameState.getCurrentState();
 
-                if (currentState == GameState.GAME_OVER) {
+                if (currentState.isState(GameOverState.getInstance())) {
                     System.out.println("-- Game Over --");
                     break;
                 }
 
-                if (currentState == GameState.VICTORY) {
+                if (currentState.isState(VictoryState.getInstance())) {
                     System.out.println("-- Win --");
                     break;
                 }
@@ -64,14 +63,10 @@ public class Main {
                             gameController.handleTileFlag(x, y);
                             break;
                     }
-
                     gameController.printBoard();
-
                 }
             }
             scanner.close();
         }
     }
-
-
 }

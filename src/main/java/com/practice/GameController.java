@@ -1,39 +1,39 @@
 package com.practice;
 
 public class GameController {
-    // 게임 상태, 이벤트 , 게임 보드 관리하는 컨트롤러
-    private GameStateModel gameState; // 왜 final 로 하라는 거야...
-    private GameBoard gameBoard;  // 여기가 public 이고 아니고가 영향을 주는감...
+    private GameStateModel gameState;
+    private GameBoard gameBoard;
+    private GameView gameView;
 
     public GameController (int rows, int cols, String level, GameStateModel gameState) {
         this.gameState = gameState;
         this.gameBoard = new GameBoard(rows, cols, level);
+        this.gameView = new GameView();
     }
 
     public void handleTileClick(int x, int y) {
         Tile tile = gameBoard.getTile(x,y);
-        gameState.handleEvent("click_tile");
+        //gameState.handleEvent("click_tile");
+        gameState.handleEvent(GameEvent.CLICK_TILE);
 
-        // 타일이 지뢰면
         if (tile.isMine()) {
-            gameState.handleEvent("click_mine");
+            //gameState.handleEvent("click_mine");
+            gameState.handleEvent(GameEvent.CLICK_MINE);
         } else {
-            // 아니면 열어야지
             gameBoard.openTile(x, y, gameState);
         }
     }
-
 
     public void handleTileFlag(int x, int y) {
         gameBoard.checkedFlag(x,y);
     }
 
     public void printBoard() {
-        gameBoard.printBoard();
+        gameView.printBoard(gameBoard);
     }
 
-
     public void startGame() {
-        gameState.handleEvent("game_start"); // 게임 시작 이벤트
+        //gameState.handleEvent("game_start");
+        gameState.handleEvent(GameEvent.GAME_START);
     }
 }

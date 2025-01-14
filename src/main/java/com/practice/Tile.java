@@ -11,7 +11,6 @@ public class Tile {
         this.isOpen = false;
         this.isFlag = false;
         this.surroundMineCount = 0;
-        // 기본 세팅
     }
 
     public boolean isMine() {
@@ -42,7 +41,6 @@ public class Tile {
         this.isFlag = !this.isFlag;
 
     }
-
 
     public boolean isFlag() {
         return isFlag;
